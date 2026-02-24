@@ -54,12 +54,75 @@ curl -s "http://localhost:3000/s/[SESSION]" -d "say Oi! Tudo bem?"
 
 Assim a interação fica mais natural!
 
-## Dicas de Personalidade
+---
 
-- **Seja curiosa** — faça perguntas genuínas
-- **Responda de forma dinâmica** — não seja robótico
-- **Lembre-se das pessoas** — guarde contexto das conversas
-- **Seja útil** — ofereça ajuda quando necessário
+## 🧱 Como Construir (Voxel Builder)
+
+O sistema usa coordenadas de voxel (x, y, z) para posicionar cubos no mundo.
+
+### API de Construção
+
+Use o endpoint `/openclaw-gateway/action`:
+
+```bash
+curl -s -X POST "http://localhost:3000/openclaw-gateway/action" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "action": {
+      "type": "build.place",
+      "input": {
+        "targetGrid": {"x": 0, "y": 0, "z": 0}
+      }
+    }
+  }'
+```
+
+### Comandos de Build
+
+| Comando | Descrição |
+|---------|-----------|
+| `build.perception` | Ver o estado atual (cubos, players, limites) |
+| `build.place` | Colocar um cubo na posição (x, y, z) |
+| `build.reposition-auto` | Mover o próximo cubo para uma posição |
+| `build.remove` | Remover um cubo por voxel |
+| `build.clear` | Remover todos os cubos |
+| `build.carry.start` | Pegar um cubo |
+| `build.carry.stop` | Soltar o cubo carregado |
+
+### Ver Perception (Status)
+
+```bash
+curl -s -X POST "http://localhost:3000/openclaw-gateway/action" \
+  -H "Content-Type: application/json" \
+  -d '{"action":{"type":"build.perception"}}'
+```
+
+Retorna:
+- `limits.remaining` — cubos disponíveis
+- `limits.maxCubes` — limite máximo
+- `cubes[]` — cubos existentes
+- `players[]` — players no mundo
+
+### Erros Comuns
+
+- **UNAUTHORIZED** — Token não autorizado (verifique configuração)
+- **MAX_CUBES_REACHED** — Limite atingido, use `build.reposition-auto`
+- **VOXEL_OCCUPIED** — Escolha outro voxel
+- **MAX_STACK_HEIGHT_REACHED** — Escolha outra coluna
+
+### Dica de Ouro: Andar Após Construir
+
+**SEMPRE** vá até onde construiu depois de colocar cubos!
+
+```bash
+# Construir
+curl -s ... -d '{"action":{"type":"build.place","input":{"targetGrid":{"x":5,"y":0,"z":5}}}}'
+
+# Ir até lá
+curl -s "http://localhost:3000/s/[SESSION]" -d "goto 5 5"
+```
+
+---
 
 ## Ver o Status do Mundo
 
@@ -68,6 +131,15 @@ curl -s https://hyperfy.lulu.tekne.studio/status
 ```
 
 Retorna a lista de todos os players conectados.
+
+---
+
+## Dicas de Personalidade
+
+- **Seja curiosa** — faça perguntas genuínas
+- **Responda de forma dinâmica** — não seja robótico
+- **Lembre-se das pessoas** — guarde contexto das conversas
+- **Seja útil** — ofereça ajuda quando necessário
 
 ---
 
