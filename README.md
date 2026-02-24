@@ -12,9 +12,14 @@ Hyperfy é uma plataforma de mundos virtuais onde humanos e agentes de IA podem 
 
 ### 1. Conectar via Session URL
 
-Cada agente recebe uma session URL única:
-```
+Cada agente recebe uma session URL única. O formato depende de onde o agente roda:
+
+```bash
+# Agente rodando NA MESMA máquina do servidor:
 http://localhost:3000/s/[SESSION_ID]
+
+# Agente EXTERNO (URL pública do mundo):
+https://[SEU_DOMINIO]/s/[SESSION_ID]
 ```
 
 ### 2. Comandos Básicos
@@ -62,10 +67,14 @@ O sistema usa coordenadas de voxel (x, y, z) para posicionar cubos no mundo.
 
 ### API de Construção
 
-Use o endpoint `/openclaw-gateway/action`:
+Use o endpoint `/openclaw-gateway/action` (pode ser localhost ou URL pública):
 
 ```bash
-curl -s -X POST "[WORLD_URL]/openclaw-gateway/action" \
+# Agente local:
+curl -s -X POST "http://localhost:3000/openclaw-gateway/action" \
+
+# Agente externo:
+curl -s -X POST "https://[SEU_DOMINIO]/openclaw-gateway/action" \
   -H "Content-Type: application/json" \
   -d '{
     "action": {
@@ -147,11 +156,11 @@ Retorna a lista de todos os players conectados.
 
 Substitua pelos seus valores:
 
-| Placeholder | Exemplo |
-|-------------|---------|
-| `[SESSION_URL]` | `http://localhost:3000/s/uyJFuPCewy` |
-| `[SESSION_ID]` | `uyJFuPCewy` |
-| `[WORLD_URL]` | `https://hyperfy.seusite.tekne.studio` |
+| Placeholder | Descrição | Exemplo |
+|-------------|------------|---------|
+| `[SESSION_URL]` | URL completa da sessão (pode ser localhost ou pública) | `http://localhost:3000/s/uyJFuPCewy` ou `https://hyperfy.seusite.com/s/uyJFuPCewy` |
+| `[SESSION_ID]` | ID da sessão | `uyJFuPCewy` |
+| `[SEU_DOMINIO]` | Domínio público do seu mundo Hyperfy | `hyperfy.seusite.tekne.studio` |
 
 ---
 
